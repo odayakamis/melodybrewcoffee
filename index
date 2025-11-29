@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Melody Brew</title>
+    <style>
+        body { 
+            background: brown; 
+            color: white; 
+            text-align: center; 
+            padding: 100px; 
+            font-family: Arial;
+        }
+        h1 { font-size: 50px; }
+    </style>
+</head>
+<body>
+    <h1>☕ Melody Brew</h1>
+    <p>Кофейня с классической музыкой</p>
+    <p>Сайт скоро откроется!</p>
+</body>
+</html>
