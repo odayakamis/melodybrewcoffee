@@ -1,21 +1,574 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebApplication1.Default" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Melody Brew</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melody Brew - Кофейня с Классической Музыкой</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { 
-            background: brown; 
-            color: white; 
-            text-align: center; 
-            padding: 100px; 
-            font-family: Arial;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1 { font-size: 50px; }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: linear-gradient(135deg, #3E2723 0%, #5D4037 50%, #8D6E63 100%);
+            color: #FFF8E1;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Навигация */
+        .navbar {
+            background: rgba(62, 39, 35, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #D7CCC8;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #D7CCC8, #BCAAA4, #8D6E63);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #FFF8E1;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            color: #D7CCC8;
+            background: rgba(215, 204, 200, 0.1);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #D7CCC8;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .login-btn, .register-btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-btn {
+            background: transparent;
+            color: #FFF8E1;
+            border: 2px solid #D7CCC8;
+        }
+
+        .login-btn:hover {
+            background: rgba(215, 204, 200, 0.1);
+        }
+
+        .register-btn {
+            background: linear-gradient(45deg, #8D6E63, #6D4C41);
+            color: #FFF8E1;
+            border: 2px solid #BCAAA4;
+        }
+
+        .register-btn:hover {
+            background: linear-gradient(45deg, #6D4C41, #8D6E63);
+            transform: translateY(-2px);
+        }
+
+        /* Герой секция */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(141, 110, 99, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(93, 64, 55, 0.6) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(62, 39, 35, 0.8) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #D7CCC8, #BCAAA4, #FFF8E1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 50px rgba(215, 204, 200, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            color: #D7CCC8;
+            font-style: italic;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(45deg, #8D6E63, #6D4C41);
+            color: #FFF8E1;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(141, 110, 99, 0.4);
+            border: 2px solid #BCAAA4;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(141, 110, 99, 0.6);
+            background: linear-gradient(45deg, #6D4C41, #8D6E63);
+        }
+
+        /* О кофейне */
+        .about {
+            padding: 6rem 5%;
+            text-align: center;
+            background: rgba(62, 39, 35, 0.7);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: #D7CCC8;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #BCAAA4;
+            margin-bottom: 4rem;
+            font-style: italic;
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #D7CCC8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(215, 204, 200, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-color: #D7CCC8;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #BCAAA4;
+        }
+
+        .feature-item h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: #FFF8E1;
+        }
+
+        .feature-item p {
+            color: #BCAAA4;
+            line-height: 1.6;
+        }
+
+        /* Музыкальные вечера */
+        .events {
+            padding: 6rem 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(93, 64, 55, 0.8), rgba(62, 39, 35, 0.8));
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(215, 204, 200, 0.3);
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .event-date {
+            background: linear-gradient(45deg, #8D6E63, #6D4C41);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .event-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #FFF8E1;
+        }
+
+        .event-card p {
+            color: #BCAAA4;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Футер */
+        footer {
+            background: rgba(48, 29, 26, 0.95);
+            padding: 4rem 5% 2rem;
+            border-top: 2px solid #8D6E63;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #D7CCC8;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #BCAAA4;
+            line-height: 1.8;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: #D7CCC8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            font-size: 1.3rem;
+            padding: 0.5rem;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #8D6E63;
+            color: #8D6E63;
+        }
+
+        /* Анимации */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .nav-links { gap: 1rem; }
+            .auth-buttons { gap: 0.5rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+        }
     </style>
 </head>
 <body>
-    <h1>☕ Melody Brew</h1>
-    <p>Кофейня с классической музыкой</p>
-    <p>Сайт скоро откроется!</p>
+    <form id="form1" runat="server">
+        <!-- Навигация -->
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-mug-hot"></i>
+                Melody Brew
+            </div>
+            <div class="nav-links">
+                <a href="Default.aspx"><i class="fas fa-home"></i>Главная</a>
+                <a href="Menu.aspx"><i class="fas fa-coffee"></i>Меню</a>
+                <a href="Events.aspx"><i class="fas fa-music"></i>Концерты</a>
+                <a href="About.aspx"><i class="fas fa-info-circle"></i>О нас</a>
+                <a href="Contact.aspx"><i class="fas fa-phone"></i>Контакты</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="Login.aspx" class="login-btn"><i class="fas fa-sign-in-alt"></i>Вход</a>
+                <a href="Register.aspx" class="register-btn"><i class="fas fa-user-plus"></i>Регистрация</a>
+            </div>
+        </nav>
+
+        <!-- Герой секция -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Melody Brew</h1>
+                <p>Кофейня, где аромат свежего кофе встречает звуки вечной классики</p>
+                <div class="cta-buttons">
+                    <a href="Menu.aspx" class="cta-button">
+                        <i class="fas fa-coffee"></i>Посмотреть Меню
+                    </a>
+                    <a href="Events.aspx" class="cta-button">
+                        <i class="fas fa-calendar-alt"></i>Ближайшие Концерты
+                    </a>
+                    <a href="Reservation.aspx" class="cta-button">
+                        <i class="fas fa-table"></i>Забронировать Столик
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- О кофейне -->
+        <section class="about">
+            <h2 class="section-title">Уникальная Атмосфера</h2>
+            <p class="section-subtitle">Место, где рождается гармония вкуса и звука</p>
+            
+            <div class="about-content fade-in">
+                <p>Melody Brew — это не просто кофейня. Это пространство, где каждая чашка кофе сопровождается шедеврами классической музыки. Мы создали особенное место для тех, кто ценит изысканные вкусы и вечные мелодии.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item fade-in">
+                    <div class="feature-icon"><i class="fas fa-music"></i></div>
+                    <h3>Живая Музыка</h3>
+                    <p>Ежедневные выступления профессиональных музыкантов в уютной атмосфере</p>
+                </div>
+                <div class="feature-item fade-in">
+                    <div class="feature-icon"><i class="fas fa-coffee"></i></div>
+                    <h3>Премиальный Кофе</h3>
+                    <p>Отборные сорта кофе из лучших регионов мира, обжаренные по уникальным рецептам</p>
+                </div>
+                <div class="feature-item fade-in">
+                    <div class="feature-icon"><i class="fas fa-couch"></i></div>
+                    <h3>Уютная Обстановка</h3>
+                    <p>Комфортные зоны для работы, отдыха и наслаждения музыкой в приятной компании</p>
+                </div>
+                <div class="feature-item fade-in">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Музыкальное Сообщество</h3>
+                    <p>Место встречи для ценителей классической музыки и кофейной культуры</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Музыкальные вечера -->
+        <section class="events">
+            <h2 class="section-title">Ближайшие Концерты</h2>
+            <p class="section-subtitle">Живые выступления в атмосфере уюта и гармонии</p>
+            
+            <div class="events-grid">
+                <div class="event-card fade-in">
+                    <div class="event-date">15 ДЕКАБРЯ 2024 • 19:00</div>
+                    <h3>Вечер Бетховена</h3>
+                    <p>Исполнение Лунной сонаты и других произведений великого композитора. Погрузитесь в мир страстей и эмоций гения классической музыки.</p>
+                    <a href="Events.aspx" style="color: #D7CCC8; text-decoration: underline;">Подробнее →</a>
+                </div>
+                <div class="event-card fade-in">
+                    <div class="event-date">22 ДЕКАБРЯ 2024 • 18:30</div>
+                    <h3>Рождественские Мотивы</h3>
+                    <p>Классические рождественские произведения в исполнении струнного квартета. Создайте праздничное настроение вместе с нами.</p>
+                    <a href="Events.aspx" style="color: #D7CCC8; text-decoration: underline;">Подробнее →</a>
+                </div>
+                <div class="event-card fade-in">
+                    <div class="event-date">5 ЯНВАРЯ 2025 • 20:00</div>
+                    <h3>Новогодний Вальс</h3>
+                    <p>Вальсы Штрауса и других композиторов в праздничной атмосфере. Начните новый год с прекрасной музыки и изысканного кофе.</p>
+                    <a href="Events.aspx" style="color: #D7CCC8; text-decoration: underline;">Подробнее →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Футер -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Melody Brew</h3>
+                    <p>Кофейня с классической музыкой</p>
+                    <p>г. Москва, ул. Арбат, 25</p>
+                    <p>+7 (495) 123-45-67</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Часы работы</h3>
+                    <p>Пн-Пт: 8:00 - 23:00</p>
+                    <p>Сб-Вс: 9:00 - 00:00</p>
+                    <p>Концерты: с 19:00 ежедневно</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Быстрые ссылки</h3>
+                    <a href="Menu.aspx">Меню</a>
+                    <a href="Events.aspx">Концерты</a>
+                    <a href="Reservation.aspx">Бронирование</a>
+                    <a href="About.aspx">О нас</a>
+                    <a href="Contact.aspx">Контакты</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Аккаунт</h3>
+                    <a href="Login.aspx">Вход</a>
+                    <a href="Register.aspx">Регистрация</a>
+                    <a href="Profile.aspx">Личный кабинет</a>
+                    <a href="Loyalty.aspx">Программа лояльности</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Melody Brew. Кофейня с классической музыкой. Все права защищены.</p>
+            </div>
+        </footer>
+
+        <script>
+            // Анимация появления элементов при скролле
+            document.addEventListener('DOMContentLoaded', function () {
+                const fadeElements = document.querySelectorAll('.fade-in');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                fadeElements.forEach(element => {
+                    observer.observe(element);
+                });
+            });
+        </script>
+    </form>
 </body>
 </html>
